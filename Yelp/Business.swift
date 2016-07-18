@@ -84,6 +84,7 @@ class Business: NSObject {
         return businesses
     }
     
+    
     class func searchWithTerm(term: String, completion: ([Business]!, NSError!) -> Void) {
         YelpClient.sharedInstance.searchWithTerm(term, completion: completion)
     }
