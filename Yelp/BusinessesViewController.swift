@@ -22,12 +22,7 @@ class BusinessesViewController: UIViewController, FiltersViewControllerDelegate,
         tableView.delegate = self
         tableView.dataSource = self
         tableView.estimatedRowHeight = 120
-        
-//      searchBar.delegate = self
-//      self.searchBar.sizeToFit()
-//      self.navigationItem.titleView = self.searchBar
-        
-        //search bar create programmatically
+
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -74,17 +69,29 @@ class BusinessesViewController: UIViewController, FiltersViewControllerDelegate,
         let filterVC  = navController.topViewController as! FiltersViewController
         filterVC.delegate = self
     }
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter: [String], didUpdateSort sortMode: Int, didUpdateDistance distanceMode: Double) {
+    func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter: [String], didUpdateSort sortMode: Int, didUpdateDistance distanceMode: Double, didUpdateDeal isDealOn: Bool) {
         print("businessVC got filter from filterVC")
-        Business.searchWithTerm("Thai", sort: nil, categories: filter, deals: nil) {   (businesses: [Business]!, error: NSError!) in
+        var sortModeSelected:YelpSortMode
+        switch sortMode{
+        case 0 :
+            sortModeSelected = YelpSortMode.BestMatched
+        case 1 :
+            sortModeSelected = YelpSortMode.Distance
+        case 2:
+            sortModeSelected = YelpSortMode.HighestRated
+        default: sortModeSelected = YelpSortMode.BestMatched
+        }
+        Business.searchWithTerm("", sort: sortModeSelected, categories: filter, deals: isDealOn) {   (businesses: [Business]!, error: NSError!) in
             self.filteredBusinesses = businesses.filter({
                 let miles = $0.distance!.characters.split{$0 == " "}.map(String.init)
                 let mileValue = Double(miles[0])
                 return (mileValue < distanceMode)
             })
+            
             for busines in businesses{
                 print(busines)
             }
+            self.filteredBusinesses = businesses
             self.tableView.reloadData()
         }
     }
@@ -111,18 +118,6 @@ extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource {
             
         
         cell.business = filteredBusinesses[indexPath.row]
-//        let business: Business
-//        if self.searchController.active && self.searchController.searchBar.text != "" {
-//            print("empty");
-//            business = filteredBusinesses[indexPath.row]
-//            cell.business = business
-//        } else {
-//            business = businesses[indexPath.row]
-//             cell.business = business
-//        }
-//        
-//   
-        
        
         
         

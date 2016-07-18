@@ -8,7 +8,7 @@
 
 import UIKit
 @objc protocol DealCellDelegate {
-    optional func dealCellDidSwitchChanged(switchCell: DealCell)
+    optional func dealCellDidSwitchChanged(switchCell: DealCell, changeValue value: Bool)
 }
 
 class DealCell: UITableViewCell {
@@ -26,4 +26,8 @@ class DealCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    @IBAction func switchedDeal(sender: UISwitch) {
+        print("deal switched")
+        delegate?.dealCellDidSwitchChanged!(self, changeValue:onSwitch.on)
+    }
 }

@@ -10,6 +10,7 @@ import Foundation
 class SettingPreferences{
     var sortMode:Int = 0
     var distanceMode:Double = 0.0
+    var isDeal:Bool = false
     var switchStates = [Int : Bool] ()
 
     

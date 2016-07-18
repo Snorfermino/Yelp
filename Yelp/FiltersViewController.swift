@@ -8,9 +8,10 @@
 
 import UIKit
 @objc protocol FiltersViewControllerDelegate{
-    optional func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter:[String], didUpdateSort sortMode: Int, didUpdateDistance distanceMode: Double)
+    optional func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter:[String], didUpdateSort sortMode: Int, didUpdateDistance distanceMode: Double, didUpdateDeal isDealOn: Bool)
 }
 class FiltersViewController: UIViewController {
+    var deal:Bool = false
     var sort:Int = 0
     var distance:Double = 0
     var distanceSwitch = false
@@ -195,10 +196,7 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
-        
-       
-        //(0..<40).map{ _ in flags.append(true)}
-        // Do any additional setup after loading the view.
+     
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -208,7 +206,7 @@ class FiltersViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
     }
     
     @IBAction func onCancel(sender: UIBarButtonItem) {
@@ -227,9 +225,10 @@ class FiltersViewController: UIViewController {
         settingPreferences.sortMode = sort
         settingPreferences.distanceMode = distance
         settingPreferences.switchStates = switchStates
+        settingPreferences.isDeal = deal
             
             
-            delegate?.filtersViewController!(self, didUpdateFilter: filters, didUpdateSort: sortMode, didUpdateDistance: distance)
+        delegate?.filtersViewController!(self, didUpdateFilter: filters, didUpdateSort: sortMode, didUpdateDistance: distance, didUpdateDeal: deal)
         
             
        
@@ -240,17 +239,6 @@ class FiltersViewController: UIViewController {
         let ip = tableView.indexPathForCell(switchCell)
         switchStates[ip!.row] = value
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-
 }
 
 extension FiltersViewController: UITableViewDelegate, UITableViewDataSource , FilterCellDelegate{
@@ -295,6 +283,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource , Fi
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCellWithIdentifier("DealCell", forIndexPath: indexPath) as! DealCell
+            cell.onSwitch.on = deal
             cell.delegate = self
             return cell
             
@@ -356,8 +345,9 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource , Fi
 
 extension FiltersViewController: DealCellDelegate {
     
-    func dealCellDidSwitchChanged (sliderCell: DealCell, didUpdateSlider starValue: Int) {
-        dealSwitch = sliderCell.onSwitch.on
+    func dealCellDidSwitchChanged (switchCell: DealCell, changeValue value: Bool) {
+        deal = value
+        dealSwitch = value
     }
     
 }

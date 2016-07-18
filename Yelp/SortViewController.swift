@@ -56,8 +56,6 @@ extension SortViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         return 1
     }
     
-    // returns the # of rows in each component..
-    @available(iOS 2.0, *)
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return sortSelections.count
     }
